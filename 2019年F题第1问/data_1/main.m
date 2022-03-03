@@ -1,6 +1,7 @@
 clc
 clear 
 close all
+
 %% ¶ÁÈ¡Êý¾Ý
 DataGet()
 load data
