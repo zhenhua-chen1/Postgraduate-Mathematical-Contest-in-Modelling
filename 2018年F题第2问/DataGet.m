@@ -3,11 +3,17 @@ function DataGet()
 data1=xlsread('InputData.xlsx','Pucks');
 data2=xlsread('InputData.xlsx','Tickets');
 data3=xlsread('InputData.xlsx','Gates');
+data2(:,3)=data2(:,3)-43119;
+data2(:,5)=data2(:,5)-43119;
 Z=length(data1);%飞机总数
 N=length(data3);%登机口得数量
-ta_i=data1(:,17)*24*60;%到达时刻
-td_i=data1(:,18)*24*60;%出发时刻
+Passenger=length(data2);%乘客总数
+date_a=data2(:,3);%到达日期
+date_d=data2(:,5);%离开日期
+ta_i=data1(:,18)*24*60;%到达时刻
+td_i=data1(:,19)*24*60;%出发时刻
 Bii=zeros(Z,Z);
+transfer_time=[15,20,35,40;20,15,40,35;35,40,20,30;40,45,30,20];%中转时间
 
 %% 求出Aij
 arrive_i=data1(:,4);
