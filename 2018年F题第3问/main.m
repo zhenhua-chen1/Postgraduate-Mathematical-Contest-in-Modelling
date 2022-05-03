@@ -2,10 +2,10 @@ clc
 clear all
 DataGet()
 load data
-%% 遗传算法数据
-Iter_max=10;%最大迭代次数
 pop_size=10;%种群规模
 best_line=[];
+%% 遗传算法数据
+Iter_max=10;%最大迭代次数
 w=[0.6,0.3,0.1];%适应性函数对应系数
 cp=0.6; %交叉概率
 mp=0.1;% 变异概率
@@ -26,7 +26,7 @@ for t=1:Iter_max
     Passenger_pop2 = ga_cross( Passenger_pop2,cp);
     Passenger_pop2 = ga_mutation(Passenger_pop2 ,mp);
 %     fitness2= ga_fitness2(Passenger_pop2,w);
-    fitness2= ga_fitness(Passenger_pop);
+    fitness2= ga_fitness(Passenger_pop2);
     best_fit2=min(fitness2);
     if best_fit2<best_fit
         fitness=fitness2;
