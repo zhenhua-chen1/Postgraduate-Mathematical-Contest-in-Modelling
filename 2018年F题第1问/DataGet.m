@@ -5,8 +5,8 @@ data2=xlsread('InputData.xlsx','Tickets');
 data3=xlsread('InputData.xlsx','Gates');
 Z=length(data1);% Number of flights
 N=length(data3);% Number of  gates
-ta_i=data1(:,17)*24*60;% the time of arrival
-td_i=data1(:,18)*24*60;% the time of departure
+ta_i=data1(:,18)*24*60;% the time of arrival
+td_i=data1(:,19)*24*60;% the time of departure
 Bii=zeros(Z,Z);
 
 %% get the Aij

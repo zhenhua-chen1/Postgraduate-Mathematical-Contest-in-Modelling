@@ -1,6 +1,6 @@
 clc
 clear all
-%DataGet()
+% DataGet()
 load data
 Cij=zeros(Z,N);% is i assigned to j
 Z=1:Z;
