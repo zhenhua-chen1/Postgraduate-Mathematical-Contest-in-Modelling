@@ -1,18 +1,22 @@
 function DataGet()
 %% load data
+% macOS n=4
+% windows n=3
+n=4;
+
 data1=xlsread('InputData.xlsx','Pucks');
 data2=xlsread('InputData.xlsx','Tickets');
 data3=xlsread('InputData.xlsx','Gates');
 Z=length(data1);% Number of flights
 N=length(data3);% Number of  gates
-ta_i=data1(:,18)*24*60;% the time of arrival
-td_i=data1(:,19)*24*60;% the time of departure
+ta_i=data1(:,n+14)*24*60;% the time of arrival
+td_i=data1(:,n+15)*24*60;% the time of departure
 Bii=zeros(Z,Z);
 
 %% get the Aij
-arrive_i=data1(:,4);
-depart_i=data1(:,9);
-size_i=data1(:,5);% the size of body for flight
+arrive_i=data1(:,n);
+depart_i=data1(:,n+5);
+size_i=data1(:,n+1);% the size of body for flight
 arrive_j=data3(:,1);
 depart_j=data3(:,2);
 size_j=data3(:,3);% the size of body for gate
