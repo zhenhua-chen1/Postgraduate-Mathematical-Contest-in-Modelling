@@ -1,21 +1,21 @@
 function DataGet()
-%% 读取数据
+%% load data
 data1=xlsread('InputData.xlsx','Pucks');
 data2=xlsread('InputData.xlsx','Tickets');
 data3=xlsread('InputData.xlsx','Gates');
-Z=length(data1);%飞机总数
-N=length(data3);%登机口得数量
-ta_i=data1(:,17)*24*60;%到达时刻
-td_i=data1(:,18)*24*60;%出发时刻
+Z=length(data1);% Number of flights
+N=length(data3);% Number of  gates
+ta_i=data1(:,17)*24*60;% the time of arrival
+td_i=data1(:,18)*24*60;% the time of departure
 Bii=zeros(Z,Z);
 
-%% 求出Aij
+%% get the Aij
 arrive_i=data1(:,4);
 depart_i=data1(:,9);
-size_i=data1(:,5);%航班机体类型
+size_i=data1(:,5);% the size of body for flight
 arrive_j=data3(:,1);
 depart_j=data3(:,2);
-size_j=data3(:,3);%机体类型
+size_j=data3(:,3);% the size of body for gate
 Aij=zeros(Z,N);
 arrive_ij=zeros(Z,N);
 depart_ij=zeros(Z,N);
@@ -37,12 +37,12 @@ for i=1:Z
         end
     end
 end
-Aij=arrive_ij.*depart_ij.*size_ij;%i航班是否与登机口j相匹配
+Aij=arrive_ij.*depart_ij.*size_ij;% is flight i matched to gate j
 
 for i1=1:Z
     for i2=1:Z
         if i1~=i2 && ta_i(i2)-td_i(i1)>=45
-            Bii(i2,i1)=1;   %%判断两个航班是否冲突
+            Bii(i2,i1)=1;   %% Judging whether two flights conflict
             Bii(i1,i2)=1;
         end
     end
