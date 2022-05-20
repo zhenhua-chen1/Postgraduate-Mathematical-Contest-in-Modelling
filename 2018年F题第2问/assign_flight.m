@@ -2,21 +2,20 @@
         load data
         for i1=1:Z
             if sum(Cij(i1,:)==1)==0
-                % 使用过的登机口放前面
+                % used gates in front
                 [~,b]=find(Cij==1);
                 b=unique(b);
                 N_1=1:N;
                 N_1(b)=[];
                 N_1=[b',N_1];
                 for j=N_1
-                    %          if sum(Cij(i1,:))==0 %i1是否被选择过
                     flag=ones(Z,1);
                     if Aij(i1,j)==1
-                        % 在j点i1与其他是否冲突
+                        % Is i1 in conflict with other at  j
                         for i2=1:Z
                             if i1~=i2
-                                if Cij(i2,j)==1%看是否被选择过
-                                    if Bii(i1,i2)==0%i1与i2小于45分钟
+                                if Cij(i2,j)==1% See if it has been selected
+                                    if Bii(i1,i2)==0% i1 & i2 less than 45 minutes
                                         flag(i2)=0;
                                     end
                                 end

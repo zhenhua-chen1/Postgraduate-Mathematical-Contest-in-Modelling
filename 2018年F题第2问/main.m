@@ -1,29 +1,29 @@
 clc
 clear all
-DataGet()
+% DataGet()
 load data
-fitness=inf;%适应性函数（中转时间）
-Iter_max=100;%最大迭代次数
+fitness=inf;% fitness（transfer time）
+Iter_max=100;% Maximum number of iterations
 for iter=1:Iter_max
     temp_Cij=zeros(Z,N);
     temp_fitness=0;
     for p=1:Passenger
         i1=data2(p,2);
         i2=data2(p,4);
-        pos1=find_pos(i1,date_a(p),data1(:,3),data1(:,16));%找到对应航班的索引；
+        pos1=find_pos(i1,date_a(p),data1(:,3),data1(:,16));% Find the index of the corresponding flight.
         pos2=find_pos(i2,date_d(p),data1(:,8),data1(:,17));
         if ~isempty(pos1)&&~isempty(pos2)
-                j1=find(Aij(pos1,:));%找到符合约束的登机口
-                j1=is_coflict(pos1,j1,temp_Cij,Z,Bii);% 在j1点pos1与其他是否冲突
+                j1=find(Aij(pos1,:));% Find a gate that satisfies the constraints
+                j1=is_coflict(pos1,j1,temp_Cij,Z,Bii);% Is pos1 at j1 in conflict with other
             if ~isempty(j1)
-                j1=j1(ceil(rand(1)*length(j1)));%随机选一个登机口
+                j1=j1(ceil(rand(1)*length(j1)));% Randomly select a gate
                 if sum(temp_Cij(pos1,:)==1)==0
                     temp_Cij2=temp_Cij;
                     temp_Cij2(pos1,j1)=1;
                 end
             end
                 j2=find(Aij(pos2,:));
-                j2=is_coflict(pos2,j2,temp_Cij2,Z,Bii);% 在j2点pos2与其他是否冲突
+                j2=is_coflict(pos2,j2,temp_Cij2,Z,Bii);% Is pos2 at j2 in conflict with other
              if ~isempty(j1)&&~isempty(j2)
                     j2=j2(ceil(rand(1)*length(j2)));
                 temp_fitness2=calculate_fitness(pos1,j1,pos2,j2,data1,transfer_time);
@@ -37,22 +37,23 @@ for iter=1:Iter_max
              end
         end
     end
-    %更新Cij
+    % renew the Cij
     if temp_fitness<fitness
         fitness=temp_fitness;
         Cij=temp_Cij;
     end
-   disp(['第',num2str(iter),'迭代的结果为:',num2str(fitness)])
+   disp(['the No.',num2str(iter),' iteration results in: ',num2str(fitness)])
 end 
 
-Cij=assign_flight(Cij);%利用贪心算法求解
+Cij=assign_flight(Cij);% call the Greedy algorithm
 
-%% 输出
+%% output
 [a,b]=find(Cij==1);
 result=[a,b];
 b2=unique(b);
 for i=1:length(a)
-    disp(['第',num2str(a(i)),'航班分配给',num2str(b(i)),'登机口']);
+    disp(['the No.',num2str(a(i)),' flight is assigned the No.',num2str(b(i)),' gate']);
 end
-disp(['一共',num2str(length(a)),'个航班被分配'])
-disp(['一共',num2str(length(b2)),'个登机口被使用'])
+disp(['There are ',num2str(length(a)),' flights assigned in total'])
+disp(['There are ',num2str(length(b2)),' gates used in total'])
+
