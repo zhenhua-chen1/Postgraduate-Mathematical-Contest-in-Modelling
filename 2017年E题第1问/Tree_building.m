@@ -25,7 +25,7 @@ while 1
         c;
         po;
 %% step4:if there is an active node,then return to step1;
-    if nodeactive==0;
+    if nodeactive==0
         break
     end
 end 
