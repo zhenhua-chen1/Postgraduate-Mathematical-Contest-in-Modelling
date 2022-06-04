@@ -1,6 +1,7 @@
 clc
 clear 
 close all
+dbstop if error
 tic
 disp('load data')
 % DataGet()
@@ -60,8 +61,8 @@ MinMaxMeanAdapt=[min(MeanAdapt),max(MeanAdapt)];
 On_OffLine(IterMax,MeanAdapt,IsPlot);
 % Record the optimal value (fitness value) obtained for this iteration
 XResult=OptSwarm(PSwarmSize+1,1:PSize);
-[RC,RC_Ca,Rc_CaK]=decoding(XResult);
-YResult=Rc_CaK;
+[RC,RC_Ca,Time]=decoding(XResult);
+YResult=Time;
 Result={};
 Result=[Result,RC,YResult,MinMaxMeanAdapt];
 
@@ -70,5 +71,9 @@ path=numtostr(Result{1,1});%Convert to string output
 for k=1:PSize
     disp(['the path of the No.',num2str(k),' vehicle is£º'])
     disp(path{k})
-    disp(['the arrive time is£º',num2str(YResult(k))])
+    disp('the arrive time is£º')
+    tik=YResult(k,:);
+    tik(find(tik==0))=[];
+    tik=[0,tik];
+    disp(num2str(tik))
 end

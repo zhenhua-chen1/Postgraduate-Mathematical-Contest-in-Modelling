@@ -42,39 +42,32 @@ F2=assign(3,:);
 %% 求出起点到发射点位1
 RC=zeros(length(F1),20);
 time_R=zeros(length(F1),20);
-Rc_Ca=[];
 for k=1:length(F1)
     t=F1(k)+2;
     if k<=3
         s=1;
         [Ca,R_c,c2]=Tree_building(s,tij1,t);
         [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
-        Rc_Ca=[Rc_Ca;Ca];
     elseif k>3&&k<=6
         s=1;
         [Ca,R_c,c2]=Tree_building(s,tij2,t);
         [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
-        Rc_Ca=[Rc_Ca;Ca];
     elseif k>6&&k<=12
         s=1;
         [Ca,R_c,c2]=Tree_building(s,tij3,t);
         [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
-        Rc_Ca=[Rc_Ca;Ca];
      elseif k>12&&k<=15
         s=2;
         [Ca,R_c,c2]=Tree_building(s,tij1,t);
         [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
-        Rc_Ca=[Rc_Ca;Ca];
       elseif k>15&&k<=18  
         s=2;
         [Ca,R_c,c2]=Tree_building(s,tij2,t);
         [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
-        Rc_Ca=[Rc_Ca;Ca];
     else
         s=2;
         [Ca,R_c,c2]=Tree_building(s,tij3,t);
         [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
-        Rc_Ca=[Rc_Ca;Ca];
     end
 end
 %% 从发射点位1到转载点
@@ -89,19 +82,16 @@ for i=1:vehicle
         [Ca,R_c,c2]=Tree_building(s,tij1_Z,t);
         [RC2,time_R2]=get_tR(R_c,c2,i,RC2,time_R2);%get the time and route
         time_R2(i,1:length(R_c))=time_R2(i,1:length(R_c))+max(time_R(i,:));
-        Rc_Ca(i)=Rc_Ca(i)+Ca+0.17;
    end
    if (i>=4&&i<=6)|| (i>=16 &&i<=18)
         [Ca,R_c,c2]=Tree_building(s,tij2_Z,t);
         [RC2,time_R2]=get_tR(R_c,c2,i,RC2,time_R2);%get the time and route
         time_R2(i,1:length(R_c))=time_R2(i,1:length(R_c))+max(time_R(i,:));
-        Rc_Ca(i)=Rc_Ca(i)+Ca+0.17;
    end
    if (i>=7&&i<=12)|| (i>=19 &&i<=24)
         [Ca,R_c,c2]=Tree_building(s,tij3_Z,t);
         [RC2,time_R2]=get_tR(R_c,c2,i,RC2,time_R2);%get the time and route
         time_R2(i,1:length(R_c))=time_R2(i,1:length(R_c))+max(time_R(i,:));
-        Rc_Ca(i)=Rc_Ca(i)+Ca+0.17;
    end
 end
 %% 从转载点到发射点为2
@@ -117,21 +107,18 @@ for i=1:vehicle
         [RC3,time_R3]=get_tR(R_c,c2,i,RC3,time_R3);%get the time and route
         time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+max(time_R2(i,:));
         time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+0.17;
-        Rc_Ca(i)=Rc_Ca(i)+Ca;
    end
    if (i>=4&&i<=6)|| (i>=16 &&i<=18)
         [Ca,R_c,c2]=Tree_building(s,tij2_Z,t);
         [RC3,time_R3]=get_tR(R_c,c2,i,RC3,time_R3);%get the time and route
         time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+max(time_R2(i,:));
         time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+0.17;
-        Rc_Ca(i)=Rc_Ca(i)+Ca;
    end
    if (i>=7&&i<=12)|| (i>=19 &&i<=24)
         [Ca,R_c,c2]=Tree_building(s,tij3_Z,t);
         [RC3,time_R3]=get_tR(R_c,c2,i,RC3,time_R3);%get the time and route
         time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+max(time_R2(i,:));
         time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+0.17;
-        Rc_Ca(i)=Rc_Ca(i)+Ca;
    end
 end
 Route=zeros(vehicle,50);
@@ -147,15 +134,15 @@ for i=1:vehicle
     temp_time2=time_R2(i,:);
     temp_RC2(find(temp_RC2==0))=[];
     temp_time2(find(temp_time2==0))=[];
-    temp_RC2(1)=[];
-    temp_time2(1)=[];
+%     temp_RC2(1)=[];
+%     temp_time2(1)=[];
     temp_RC2=data(temp_RC2,1)';
     temp_RC3=RC3(i,:);
     temp_time3=time_R3(i,:);
     temp_RC3(find(temp_RC3==0))=[];
     temp_time3(find(temp_time3==0))=[];
-    temp_RC3(1)=[];
-    temp_time3(1)=[];
+%     temp_RC3(1)=[];
+%     temp_time3(1)=[];
     temp_RC3=data(temp_RC3,1)';
     Route(i,1:length(temp_RC)+length(temp_RC2)+length(temp_RC3))=[temp_RC,temp_RC2,temp_RC3];
     Time(i,1:length(temp_time)+length(temp_time2)+length(temp_time3))=[temp_time,temp_time2,temp_time3];

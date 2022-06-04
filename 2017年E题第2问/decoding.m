@@ -1,4 +1,4 @@
-function [Route,fitness,Rc_Ca]=decoding(P)
+function [Route,fitness,Time]=decoding(P)
 load data
 %% 求出初始分配
 De=floor(1000*(abs(P)-floor(abs(P))));%取小数
@@ -56,61 +56,38 @@ F2=assign(3,:);
 %% 求出时间和路径
 %% 求出起点到发射点位1
 RC=zeros(length(F1),20);
-Rc_Ca=[];
+time_R=zeros(length(F1),20);
 for k=1:length(F1)
     t=F1(k)+2;
-    if k<=3;
+    if k<=3
         s=1;
-        [Ca,R_c]=Tree_building(s,tij1,t);
-%         for i=1:length(R_c)
-%             R_c(i)=data(R_c(i),1);
-%         end
-        RC(k,1:length(R_c))=R_c;
-        Rc_Ca=[Rc_Ca;Ca];
+        [Ca,R_c,c2]=Tree_building(s,tij1,t);
+        [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
     elseif k>3&&k<=6
         s=1;
-        [Ca,R_c]=Tree_building(s,tij2,t);
-%         for i=1:length(R_c)
-%             R_c(i)=data(R_c(i),1);
-%         end
-        RC(k,1:length(R_c))=R_c;
-        Rc_Ca=[Rc_Ca;Ca];
+        [Ca,R_c,c2]=Tree_building(s,tij2,t);
+        [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
     elseif k>6&&k<=12
         s=1;
-        [Ca,R_c]=Tree_building(s,tij3,t);
-%         for i=1:length(R_c)
-%             R_c(i)=data(R_c(i),1);
-%         end
-        RC(k,1:length(R_c))=R_c;
-        Rc_Ca=[Rc_Ca;Ca];
+        [Ca,R_c,c2]=Tree_building(s,tij2,t);
+        [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
      elseif k>12&&k<=15
         s=2;
-        [Ca,R_c]=Tree_building(s,tij1,t);
-%         for i=1:length(R_c)
-%             R_c(i)=data(R_c(i),1);
-%         end
-        RC(k,1:length(R_c))=R_c;
-        Rc_Ca=[Rc_Ca;Ca];
+        [Ca,R_c,c2]=Tree_building(s,tij2,t);
+        [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
       elseif k>15&&k<=18  
         s=2;
-        [Ca,R_c]=Tree_building(s,tij2,t);
-%         for i=1:length(R_c)
-%             R_c(i)=data(R_c(i),1);
-%         end
-        RC(k,1:length(R_c))=R_c;
-        Rc_Ca=[Rc_Ca;Ca];
+        [Ca,R_c,c2]=Tree_building(s,tij2,t);
+        [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
     else
         s=2;
-        [Ca,R_c]=Tree_building(s,tij3,t);
-%         for i=1:length(R_c)
-%             R_c(i)=data(R_c(i),1);
-%         end
-        RC(k,1:length(R_c))=R_c;
-        Rc_Ca=[Rc_Ca;Ca];
+        [Ca,R_c,c2]=Tree_building(s,tij2,t);
+        [RC,time_R]=get_tR(R_c,c2,k,RC,time_R);%get the time and route
     end
 end
 %% 从发射点位1到转载点
 RC2=zeros(length(F1),20);
+time_R2=zeros(length(F1),20);
 for i=1:vehicle
    temp_RC=RC(i,:);
    temp_RC(find(temp_RC==0))=[];
@@ -123,56 +100,74 @@ for i=1:vehicle
        t=find(data(:,1)==J_Z(max_number2));
    end
    if i<=3 || (i<=15&&i>=13)
-        [Ca,R_c]=Tree_building(s,tij1_Z,t);
-        RC2(i,1:length(R_c))=R_c;
-        Rc_Ca(i)=Rc_Ca(i)+Ca+0.17;
+        [Ca,R_c,c2]=Tree_building(s,tij1_Z,t);
+        [RC2,time_R2]=get_tR(R_c,c2,i,RC2,time_R2);%get the time and route
+        time_R2(i,1:length(R_c))=time_R2(i,1:length(R_c))+max(time_R(i,:));
    end
    if (i>=4&&i<=6)|| (i>=16 &&i<=18)
-        [Ca,R_c]=Tree_building(s,tij2_Z,t);
-        RC2(i,1:length(R_c))=R_c;
-        Rc_Ca(i)=Rc_Ca(i)+Ca+0.17;
+        [Ca,R_c,c2]=Tree_building(s,tij2_Z,t);
+        [RC2,time_R2]=get_tR(R_c,c2,i,RC2,time_R2);%get the time and route
+        time_R2(i,1:length(R_c))=time_R2(i,1:length(R_c))+max(time_R(i,:));
    end
    if (i>=7&&i<=12)|| (i>=19 &&i<=24)
-        [Ca,R_c]=Tree_building(s,tij3_Z,t);
-        RC2(i,1:length(R_c))=R_c;
-        Rc_Ca(i)=Rc_Ca(i)+Ca+0.17;
+        [Ca,R_c,c2]=Tree_building(s,tij3_Z,t);
+        [RC2,time_R2]=get_tR(R_c,c2,i,RC2,time_R2);%get the time and route
+        time_R2(i,1:length(R_c))=time_R2(i,1:length(R_c))+max(time_R(i,:));
    end
 end
 %% 从转载点到发射点为2
 RC3=zeros(length(F1),20);
+time_R3=zeros(length(F1),20);
 for i=1:vehicle
    temp_RC=RC2(i,:);
    temp_RC(find(temp_RC==0))=[];
    s=temp_RC(end);
    t=F2(i)+2;
    if i<=3 || (i<=15&&i>=13)
-        [Ca,R_c]=Tree_building(s,tij1_Z,t);
-        RC3(i,1:length(R_c))=R_c;
-        Rc_Ca(i)=Rc_Ca(i)+Ca;
+        [Ca,R_c,c2]=Tree_building(s,tij1_Z,t);
+        [RC3,time_R3]=get_tR(R_c,c2,i,RC3,time_R3);%get the time and route
+        time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+max(time_R2(i,:));
+        time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+0.17;
    end
    if (i>=4&&i<=6)|| (i>=16 &&i<=18)
-        [Ca,R_c]=Tree_building(s,tij2_Z,t);
-        RC3(i,1:length(R_c))=R_c;
-        Rc_Ca(i)=Rc_Ca(i)+Ca;
+        [Ca,R_c,c2]=Tree_building(s,tij1_Z,t);
+        [RC3,time_R3]=get_tR(R_c,c2,i,RC3,time_R3);%get the time and route
+        time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+max(time_R2(i,:));
+        time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+0.17;
    end
    if (i>=7&&i<=12)|| (i>=19 &&i<=24)
-        [Ca,R_c]=Tree_building(s,tij3_Z,t);
-        RC3(i,1:length(R_c))=R_c;
-        Rc_Ca(i)=Rc_Ca(i)+Ca;
+        [Ca,R_c,c2]=Tree_building(s,tij1_Z,t);
+        [RC3,time_R3]=get_tR(R_c,c2,i,RC3,time_R3);%get the time and route
+        time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+max(time_R2(i,:));
+        time_R3(i,1:length(R_c))=time_R3(i,1:length(R_c))+0.17;
    end
 end
 Route=zeros(vehicle,50);
+Time=zeros(vehicle,50);
 for i=1:vehicle
     temp_RC=RC(i,:);
+    temp_time=time_R(i,:);
     temp_RC(find(temp_RC==0))=[];
+    temp_time(find(temp_time==0))=[];
+    temp_time=[0,temp_time];
     temp_RC=data(temp_RC,1)';
     temp_RC2=RC2(i,:);
+    temp_time2=time_R2(i,:);
     temp_RC2(find(temp_RC2==0))=[];
+    temp_time2(find(temp_time2==0))=[];
+%     temp_RC2(1)=[];
+%     temp_time2(1)=[];
     temp_RC2=data(temp_RC2,1)';
     temp_RC3=RC3(i,:);
+    temp_time3=time_R3(i,:);
     temp_RC3(find(temp_RC3==0))=[];
+    temp_time3(find(temp_time3==0))=[];
+%     temp_RC3(1)=[];
+%     temp_time3(1)=[];
     temp_RC3=data(temp_RC3,1)';
     Route(i,1:length(temp_RC)+length(temp_RC2)+length(temp_RC3))=[temp_RC,temp_RC2,temp_RC3];
+    Time(i,1:length(temp_time)+length(temp_time2)+length(temp_time3))=[temp_time,temp_time2,temp_time3];
 end
-fitness=max(Rc_Ca)-min(Rc_Ca);
+Time=get_tik(Route,Time);
+fitness=max(max(Time));
 end

@@ -1,4 +1,4 @@
-function [c,R_c]=Tree_building(o,Ca,t)%Tree-building algorithm for origin o(backnode means the minimum in the right-hand side of);
+function [c,R_c,c2]=Tree_building(o,Ca,t)%Tree-building algorithm for origin o(backnode means the minimum in the right-hand side of);
 %% step0£ºstart
 node=length(Ca);% Set the number of node;
 c=10000000*ones(1,node);% Set c(o,n) is ¡Þ;
@@ -25,12 +25,13 @@ while 1
         c;
         po;
 %% step4:if there is an active node,then return to step1;
-    if nodeactive==0;
+    if nodeactive==0
         break
     end
 end 
 R_c=[t];
 s=t;
+c2=c;
 c=c(t);
 while 1
  if s~=o
