@@ -1,4 +1,4 @@
-function [f,Aij_time]=get_delay_time(Aij)
+function [f,Aij_time,cancel]=get_delay_time(Aij)
     load data
     Aij=~Aij;
     [n_a,n_f]=size(Aij);
@@ -18,7 +18,14 @@ function [f,Aij_time]=get_delay_time(Aij)
             end
         end
     end
-f=sum(sum(Aij_time));
+   cancel=[];
+   if prod(sum(Aij))
+    f=sum(sum(Aij_time));
+   else
+       a=find(sum(Aij)==0);
+       cancel=a;
+       f=sum(sum(Aij_time))+length(cancel)*10*3600;
+   end
 end
 function [temp_flights,Aij_time]=get_time(i,j,temp_flights,delay_etime,Aij,Aij_time,is_fly)
               if is_fly
@@ -32,7 +39,7 @@ function [temp_flights,Aij_time]=get_time(i,j,temp_flights,delay_etime,Aij,Aij_t
               end
               Aij_time(i,j)=delayTemp;
               [~,nf]=size(Aij);
-              for f=j:nf
+              for f=j+1:nf
                   if Aij(i,f)
                        if temp_flights(f,1)-temp_flights(j,2)<45*60
                            delayTemp= 45*60-temp_flights(f,1)+temp_flights(j,2);

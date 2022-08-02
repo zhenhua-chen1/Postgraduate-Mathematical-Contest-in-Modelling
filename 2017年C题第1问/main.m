@@ -1,50 +1,77 @@
 clc
-clear all
+clear 
+close all
 dataget()
 load data
-[fitness,time]=get_delay_time(Aij1);
-iter_max=100;
-Zbest=fitness;
+[fitness,time,c]=get_delay_time(Aij1);
+delay_time1=fitness/3600;
+flight_alt=find_replace(time);
+
+%% start the replace the flight
 tic
-for i=1:iter_max
-    disp(['the number of iter is ',num2str(i)])
-    Aij=ones(length(Aircrafts),length(flights));%Aircrafts i is assigned  flights j
-    assign_i=ones(length(flights),1);
-    n_A=length(Aircrafts);%the length of Aircrafts
-    all_time=0;%the sum of Interval time
-    for n=1:n_A
-        n_airpot=Aircrafts(n,3);%Departure_airpot
-        n_Departure_time=Aircrafts(n,1);%Departure_time
-        n_arrive_time=Aircrafts(n,2);%arrive_time
-        [pos1,Aij]=find_pos1(n,n_airpot,n_Departure_time,n_arrive_time,Aij);%Random selection of suitable flights
-        while ~isempty(pos1)
-             port_arrive_time1=flights(pos1,2);%the arrive time of the 1st flight.
-             arrive_airpot=flights(pos1,4);
-             [pos1,Aij]=find_pos2(n,arrive_airpot,n_arrive_time,port_arrive_time1,Aij);   %Random selection of suitable flights  
+for f=flight_alt
+    disp(['start to change the fight ',num2str(No_Schedules(f))])
+    flights2=flights;
+    % find the flight can be switch
+    pos=find((flights2(:,4)==flights2(f,3)).*...
+        (flights2(:,2)+60*45<=flights2(f,1)).*...
+        ((flights2(:,5)~=flights2(f,5))==1));
+    % start to switch
+    for p=pos'
+        air1=flights2(p,5);
+        pos2=find(flights2(:,5)==air1);
+        pos2(1)=[];
+        air2=flights2(f,5);
+        pos3=find(flights2(:,5)==air2);
+        po3_start=find(pos3==f);
+        pos3=pos3(po3_start:end);
+        %judge the the latest time
+        if flights2(pos2(end),2)<=Aircrafts(air2,2)&&...
+                flights2(pos2(1),1)>=Aircrafts(air2,1)&&...
+                flights2(pos3(end),2)<=Aircrafts(air1,2)&&...
+                flights2(pos3(1),1)>=Aircrafts(air1,1)
+            temp_flight=flights2;
+            temp_flight(pos3,5)=air1;
+            temp_flight(pos2,5)=air2;
+            Aij=flight2Aij(temp_flight);
+            fitness2=get_delay_time(Aij);
+            if fitness>fitness2
+                fitness=fitness2;
+                Aij1=Aij;
+                flights=temp_flight;
+            end
+        else
+            continue
         end
     end
-    [fitness2,time2]=get_delay_time(Aij);
-    if fitness2<fitness
-        Aij1=Aij;
-        fitness=fitness2;
-        time=time2;
-    end
-    Zbest=[Zbest,fitness];
 end
-Zbest=Zbest/3600;
-figure
-xlabel('Number of iterations'); 
-ylabel('delay_time(h)');
-hold on
-plot(Zbest);
-toc
+[fitness,time,c]=get_delay_time(Aij1);
+delay_time2=fitness/3600;
+
+%% output
+aircrafts=cell(length(flights(:,5)),1);
+delay_time=zeros(length(flights(:,5)),1);
+for f=1:length(flights(:,5))
+    aircrafts(f)=No_Aircrafts(flights(f,5));
+end
+Schedules=No_Schedules(1:length(flights(:,5)));
+for i=1:length(delay_time)
+    delay_time(i) = time(flights(i,5),i);
+end
+T = table(Schedules,aircrafts,delay_time);
+writetable(T,'新航班表.xlsx');
+
 for i=1:length(Aircrafts)
     for j=1:length(flights)
         if Aij1(i,j)==0
-           air1= No_Aircrafts{i};
-           flight1= No_Schedules(j);
-           delay_time=time(i,j);
-            disp(['No. ', air1 ,' aircraft was assigned to flight No. ' ,num2str(flight1) ,' with a delay of ', num2str(delay_time),'s'])
+            if time(i,j)~=0
+               air1= No_Aircrafts{i};
+               flight1= No_Schedules(j);
+               delay_time=time(i,j);
+                disp(['No. ', air1 ,' aircraft was assigned to flight No. ' ,num2str(flight1) ,' with a delay of ', num2str(delay_time),'s'])
+            end
         end
     end
 end
+disp(['Delay time reduced from ',num2str(delay_time1), 'h to ',num2str(delay_time2),'h'])
+toc
