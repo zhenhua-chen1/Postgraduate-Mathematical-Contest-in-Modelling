@@ -9,7 +9,7 @@ else
 end
 
 %% 一个箱子的供油
-sbwm=consum_eng(t1:t1+T_max);;%傻逼王猛保存临时供油量
+sbwm=consum_eng(t1:t1+T_max);%保存临时供油量
 num_i=length(box_i);
 if num_i==1
    if (sum(consum_eng(t1:t1+T_max))<=Re_i(box_i))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i))%判断供油量是否小于剩余油量
