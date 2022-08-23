@@ -8,11 +8,11 @@ else
     T_max=length(temp_consum_eng);
 end
 
-%% Ò»¸öÏä×ÓµÄ¹©ÓÍ
-sbwm=consum_eng(t1:t1+T_max);%Éµ±ÆÍõÃÍ±£´æÁÙÊ±¹©ÓÍÁ¿
+%% ä¸€ä¸ªç®±å­çš„ä¾›æ²¹
+sbwm=consum_eng(t1:t1+T_max);%ä¿å­˜ä¸´æ—¶ä¾›æ²¹é‡
 num_i=length(box_i);
 if num_i==1
-   if (sum(consum_eng(t1:t1+T_max))<=Re_i(box_i))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i))%ÅĞ¶Ï¹©ÓÍÁ¿ÊÇ·ñĞ¡ÓÚÊ£ÓàÓÍÁ¿
+   if (sum(consum_eng(t1:t1+T_max))<=Re_i(box_i))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i))%åˆ¤æ–­ä¾›æ²¹é‡æ˜¯å¦å°äºå‰©ä½™æ²¹é‡
         for t=1:T_max+1
             Re_i(box_i)=Re_i(box_i)-sbwm(t);
             [x,y,z] = oCenter(Re_i);
@@ -24,7 +24,7 @@ if num_i==1
 end
 
 if num_i==2
-     if (ismember(1,box_i(1))&& ismember(2,box_i(2)))|| (ismember(6,box_i(1))&& ismember(5,box_i(2)))%1¸ø2¹©ÓÍ,2¸ø·¢¶¯»ú¹©ÓÍ
+     if (ismember(1,box_i(1))&& ismember(2,box_i(2)))|| (ismember(6,box_i(1))&& ismember(5,box_i(2)))%1ç»™2ä¾›æ²¹,2ç»™å‘åŠ¨æœºä¾›æ²¹
         if (sum(consum_eng(t1:t1+T_max))<=Re_i(box_i(1)))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i(2)))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i(2)))
             for t=1:T_max+1
                 Re_i(box_i(1))=Re_i(box_i(1))-sbwm(t);
@@ -35,7 +35,7 @@ if num_i==2
                 supply_oil(t1+t-1,box_i(2))=sbwm(t);
             end                
         end
-    elseif (ismember(1,box_i(1))&& ~ismember(2,box_i(2)))|| (ismember(6,box_i(1))&& ~ismember(5,box_i(2)))%1¸ø2¹©ÓÍ,2²»¸ø·¢¶¯»ú¹©ÓÍ
+    elseif (ismember(1,box_i(1))&& ~ismember(2,box_i(2)))|| (ismember(6,box_i(1))&& ~ismember(5,box_i(2)))%1ç»™2ä¾›æ²¹,2ä¸ç»™å‘åŠ¨æœºä¾›æ²¹
         if (epsilon*60<=Re_i(box_i(1)))&&(sum(consum_eng(t1:t1+T_max))<=Re_i(box_i(2)))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i(2)))
             for t=1:T_max+1
                 Re_i(box_i(1))=Re_i(box_i(2))-epsilon;
@@ -69,7 +69,7 @@ if num_i==2
 end
      
 if num_i==3    
- if (ismember(box_i(2),[2,5]))&&(ismember(box_i(3),[1,6]))%µÚÒ»¸öÏä×Ó¸øµÚ¶ş¸öÏä×Ó¹©ÓÍ£¬µÚ¶ş¸öÏä×ÓÏò·¢¶¯»ú¹©ÓÍ£»µÚÈı¸öÏä×ÓÏòÆäËûÏä×Ó¹©ÓÍ£¬µ«ÄÇ¸öÏä×Ó²»¹©ÓÍ
+ if (ismember(box_i(2),[2,5]))&&(ismember(box_i(3),[1,6]))%ç¬¬ä¸€ä¸ªç®±å­ç»™ç¬¬äºŒä¸ªç®±å­ä¾›æ²¹ï¼Œç¬¬äºŒä¸ªç®±å­å‘å‘åŠ¨æœºä¾›æ²¹ï¼›ç¬¬ä¸‰ä¸ªç®±å­å‘å…¶ä»–ç®±å­ä¾›æ²¹ï¼Œä½†é‚£ä¸ªç®±å­ä¸ä¾›æ²¹
         if (sum(consum_eng(t1:t1+T_max))<=Re_i(box_i(1)))&& prod(consum_eng(t1:t1+T_max)<=U_i(box_i(1)))&& (epsilon*60<=Re_i(box_i(3)))
             for t=1:T_max+1
                 Re_i(box_i(1))=Re_i(box_i(1))-sbwm(t);
