@@ -17,8 +17,8 @@ for i=sig
         temp_Re_i=Re_i;
         for t=1:T_max+1
             temp_Re_i(i)=temp_Re_i(i)-sbwm(t,i);
-            [x,y,z] = oCenter(temp_Re_i);
-            dbwm(t,i)=Deviation([x,y,z] ,t1+t-1);
+            [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+            dbwm(t,i)=Deviation([x,y,z]);
         end
         mt1(i)=max(dbwm(:,i));
     end
@@ -34,8 +34,8 @@ for i=1:length(dou)
             temp_Re_i=Re_i;
             for t=1:T_max+1
                 temp_Re_i(dou(i,1))=temp_Re_i(dou(i,1))-sbwm(t,2);
-                [x,y,z] = oCenter(temp_Re_i);
-                mnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                mnhm(t,i)=Deviation([x,y,z]);
             end                
         end
     elseif (ismember(1,dou(i,1))&& ~ismember(2,dou(i,2)))|| (ismember(6,dou(i,1))&& ~ismember(5,dou(i,2)))%1给2供油,2不给发动机供油
@@ -49,8 +49,8 @@ for i=1:length(dou)
                     temp_Re_i(5)=temp_Re_i(5)+epsilon;
                 end
                 temp_Re_i(dou(i,2))=temp_Re_i(dou(i,2))-sbwm(t,2);
-                [x,y,z] = oCenter(temp_Re_i);
-                mnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                mnhm(t,i)=Deviation([x,y,z] );
             end  
         end
     else
@@ -59,8 +59,8 @@ for i=1:length(dou)
             for t=1:T_max+1
                 temp_Re_i(dou(i,1))=temp_Re_i(dou(i,1))-0.5*sbwm(t,2);
                 temp_Re_i(dou(i,2))=temp_Re_i(dou(i,2))-0.5*sbwm(t,2);
-                [x,y,z] = oCenter(temp_Re_i);
-                mnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                mnhm(t,i)=Deviation([x,y,z]);
             end
         end
     end
@@ -85,8 +85,8 @@ for i=1:length(tri)
                 else
                     temp_Re_i(5)=temp_Re_i(5)+epsilon;
                 end
-                [x,y,z] = oCenter(temp_Re_i);
-                dmnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                dmnhm(t,i)=Deviation([x,y,z]);
             end
         end
     elseif (ismember(tri(i,2),[2,5]))&&~(ismember(tri(i,3),[1,6]))
@@ -95,8 +95,8 @@ for i=1:length(tri)
             for t=1:T_max+1
                 temp_Re_i(tri(i,1))=temp_Re_i(tri(i,1))-0.5*sbwm(t,2);
                 temp_Re_i(tri(i,3))=temp_Re_i(tri(i,3))-0.5*sbwm(t,2);
-                [x,y,z] = oCenter(temp_Re_i);
-                dmnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                dmnhm(t,i)=Deviation([x,y,z]);
             end
         end
     elseif ~(ismember(tri(i,2),[2,5]))&&~(ismember(tri(i,3),[1,6]))
@@ -111,8 +111,8 @@ for i=1:length(tri)
                 else
                     temp_Re_i(5)=temp_Re_i(5)+epsilon;
                 end
-                [x,y,z] = oCenter(temp_Re_i);
-                dmnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                dmnhm(t,i)=Deviation([x,y,z]);
             end
         end
     else
@@ -124,8 +124,8 @@ for i=1:length(tri)
                 temp_Re_i(2)=temp_Re_i(2)+epsilon;
                 temp_Re_i(5)=temp_Re_i(5)+epsilon;
                 temp_Re_i(tri(i,2))=temp_Re_i(tri(i,2))-sbwm(t,2);
-                [x,y,z] = oCenter(temp_Re_i);
-                dmnhm(t,i)=Deviation([x,y,z] ,t1+t-1);
+                [x,y,z] = oCenter(temp_Re_i,data_angle(t));
+                dmnhm(t,i)=Deviation([x,y,z]);
             end
         end
     end

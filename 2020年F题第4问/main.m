@@ -20,8 +20,8 @@ while t<=T
         [mt,supply_oil,c1_t,Re_i,t]=box_value(box_i,mt,supply_oil,c1_t,Re_i,t,epsilon);%找出60s偏差,60s供油量，剩余油量，执质心
 
     else
-         [x,y,z] = oCenter(Re_i);
-         mt(t) = Deviation([x,y,z],t); %求出当前偏差
+         [x,y,z] = oCenter(Re_i,data_angle(t));
+         mt(t) = Deviation([x,y,z]); %求出当前偏差
          c1_t(t,:)=[x,y,z];
     end
  t=t+1;
@@ -33,9 +33,9 @@ toc
 figure(1)
 plot3(c1_t(:,1),c1_t(:,2),c1_t(:,3))
 hold on
-% plot3(c2_t(:,1),c2_t(:,2),c2_t(:,3))
+% plot3(c0_t(:,1),c0_t(:,2),c0_t(:,3))
 % hold on
-%axis([-1 10 -1 10 -1 10])
+% axis([-1 10 -1 10 -1 10])
 title('质心变化曲线')
 figure(2)
 % subplot(2,1,1)
