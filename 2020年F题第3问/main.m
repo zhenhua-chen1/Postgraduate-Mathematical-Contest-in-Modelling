@@ -13,6 +13,7 @@ for i=1:max_iter
     temp_supply_oil=zeros(T,box);%供油策略
     temp_c1_t=zeros(T,3);
     temp_Re_i=origin_i*rho.*abs(randn(box,1));
+    temp_Re_i2=temp_Re_i;
     t=1;
 %% 调用初始供油
     while t<=T
@@ -31,7 +32,7 @@ for i=1:max_iter
     if max(temp_mt)<max(mt)
         supply_oil=temp_supply_oil;
         mt=temp_mt;
-        Re_i=temp_Re_i;
+        Re_i=temp_Re_i2;
         c1_t=temp_c1_t;
     end
 end
