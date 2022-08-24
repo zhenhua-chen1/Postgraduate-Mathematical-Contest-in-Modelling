@@ -9,7 +9,7 @@ mt=inf*ones(T,1);
 max_iter=10;
 epsilon=0.0001;%最小供油量
 for i=1:max_iter
-    temp_mt=zeros(T,1);
+    temp_mt=inf*ones(T,1);
     temp_supply_oil=zeros(T,box);%供油策略
     temp_c1_t=zeros(T,3);
     temp_Re_i=origin_i*rho.*abs(randn(box,1));
@@ -29,7 +29,7 @@ for i=1:max_iter
         t=t+1;
         disp(['第',num2str(i),'次迭代','计算到',num2str(t),'s'])
     end
-    if max(temp_mt)<max(mt)
+    if max(temp_mt)<=max(mt)
         supply_oil=temp_supply_oil;
         mt=temp_mt;
         Re_i=temp_Re_i2;
@@ -52,14 +52,14 @@ figure(2)
 % plot(supply_oil(:,1))
 subplot(6,1,1)
 plot(supply_oil(:,1))
-title('6个邮箱质心变化曲线')
+title('6个油箱质心变化曲线')
 subplot(6,1,2)
 plot(supply_oil(:,2))
 subplot(6,1,3)
 plot(supply_oil(:,3))
 subplot(6,1,4)
 plot(supply_oil(:,4))
-subplot(6,1,5)
+subpl ot(6,1,5)
 plot(supply_oil(:,5))
 subplot(6,1,6)
 plot(supply_oil(:,6))
@@ -67,6 +67,9 @@ hold on
 
 figure(3)
 plot(sum(supply_oil,2))
+hold on
+% plot(consum_eng)
+% hold on
 title('总油箱供油曲线')
 min_value=max(mt)
 disp('Initial oil volume is ')
