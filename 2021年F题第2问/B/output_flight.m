@@ -3,6 +3,9 @@ function output_flight(path_all1,path_all2,I2)
     [a1,b]=size(path_all1);
     [a2,b]=size(path_all2);
     rawA = readcell('机组排班Data B-Flight1.xlsx');
+    % Convert the 4rd and 7th columns to HH:MM format
+    rawA(2:end, 4) = cellfun(@(x) datestr(datenum(0, 0, 0, x*24, 0, 0), 'HH:MM'), rawA(2:end, 4), 'UniformOutput', false);
+    rawA(2:end, 7) = cellfun(@(x) datestr(datenum(0, 0, 0, x*24, 0, 0), 'HH:MM'), rawA(2:end, 7), 'UniformOutput', false);
     rawB = readcell('机组排班Data B-Crew.csv');
     twt={'员工号','航段次序','航班号','出发日期','出发时间','出发机场','到达日期','到达时间','到达机场','实际资格'};
     twt2={'航班号','出发日期','出发时间','出发机场','到达日期','到达时间','到达机场','最低配置要求'};
@@ -61,4 +64,7 @@ function output_flight(path_all1,path_all2,I2)
     end
      writecell(twt,'CrewRosters.xls')
      writecell(twt2,'UncoveredFlights.xls')
+     % Remove rows where 'Time_flight' is negative
+     scheduleTables(scheduleTables.Time_flight < 0, :) = [];
+     writetable(scheduleTables,'scheduleTables.csv')
 end
