@@ -25,6 +25,6 @@ s=0;
 for a = 1:length(advance)
     s=s+advance{a};
 end
-writecell(twt,'cut_program3.xlsx')
+writecell(twt,[fileName,'cut.xlsx'])
 rate = s/a;
 end
